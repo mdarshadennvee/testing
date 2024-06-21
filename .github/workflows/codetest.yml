@@ -7,8 +7,6 @@ on:
   pull_request:
     branches: 
       - "Sub-Naveen" # Replace with your specific branch name
-  schedule:
-    - cron: '27 11 * * 5' # Optional: Scheduled runs
 
 jobs:
   analyze:
@@ -51,11 +49,3 @@ jobs:
         with:
           category: "/language:${{matrix.language}}"
 
-      - name: Upload CodeQL Results
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: ${{ matrix.language }}-results.sarif
-
-      - name: Notify on Completion
-        if: always()  # Ensure this runs even if previous steps fail
-        run: echo "CodeQL analysis completed. Check workflow logs for details."
