@@ -51,25 +51,23 @@ jobs:
         with:
           category: "/language:${{matrix.language}}"
 
-      - name: Notify on Completion
-        if: always()  # Ensure this runs even if previous steps fail
-        run: echo "CodeQL analysis completed. Check workflow logs for details."
-
       - name: Print Security Findings
         if: always()  # Ensure this runs even if previous steps fail
         run: |
           echo "Security findings summary:"
-          # Add logic to parse and print security findings summary from logs if needed
+          grep -c "Security alert" $GITHUB_WORKSPACE/*.log
 
-      - name: Email Notification
-        if: always() && success()  # Send email on successful completion
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: naveen.chinnasamy@ennvee.net
-          server_port: 587
-          username: "Naveen Chinnasamy"
-          password: "Chn442ens"
-          subject: "CodeQL Analysis Results"
-          body: |
-            CodeQL analysis for branch '${{ github.ref }}' completed successfully.
-            Review the security findings in the workflow logs.
+      #- name: Email Notification
+       # if: always() && success()  # Send email on successful completion
+        #uses: dawidd6/action-send-mail@v3
+        #with:
+         # server_address: smtp.example.com  # Replace with your SMTP server address
+          #server_port: 587  # Replace with your SMTP server port
+          #username: ${{ secrets.EMAIL_USERNAME }}  # GitHub secret containing your email username
+         # password: ${{ secrets.EMAIL_PASSWORD }}  # GitHub secret containing your email password
+          #from: ${{ secrets.EMAIL_USERNAME }}
+          #to: user@example.com  # Replace with recipient email address
+          #subject: "CodeQL Analysis Results"
+         # body: |
+           # CodeQL analysis for branch '${{ github.ref }}' completed successfully.
+           # Review the security findings in the workflow logs.
