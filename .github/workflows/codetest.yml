@@ -3,10 +3,12 @@ name: "CodeQL for Specific Branch"
 on:
   push:
     branches: 
-      - "Sub-Naveen" # Replace with your specific branch name
+      - "main"
+      - "your-branch-name" # Replace with your specific branch name
   pull_request:
     branches: 
-      - "Sub-Naveen" # Replace with your specific branch name
+      - "main"
+      - "your-branch-name" # Replace with your specific branch name
   schedule:
     - cron: '27 11 * * 5' # Optional: Scheduled runs
 
@@ -26,7 +28,7 @@ jobs:
       matrix:
         include:
           - language: 'javascript-typescript'
-            build-mode: 'autobuild' # Use 'autobuild' for automatic builds
+            build-mode: 'none' # Use 'none' for JavaScript/TypeScript
 
     steps:
     - name: Checkout repository
@@ -45,13 +47,6 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         build-mode: ${{ matrix.build-mode }}
-
-    - if: matrix.build-mode == 'manual'
-      shell: bash
-      run: |
-        # Provide manual build commands here if needed
-        echo 'Building project manually...'
-        exit 1
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
