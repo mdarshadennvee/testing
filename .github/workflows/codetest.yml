@@ -3,12 +3,10 @@ name: "CodeQL for Specific Branch"
 on:
   push:
     branches: 
-      - "main"
-      - "your-branch-name" # Add your specific branch here
+      - "Sub-Naveen" # Add your specific branch here
   pull_request:
     branches: 
-      - "main"
-      - "your-branch-name" # Add your specific branch here
+      - "Sub-Naveen" # Add your specific branch here
   schedule:
     - cron: '27 11 * * 5'
 
