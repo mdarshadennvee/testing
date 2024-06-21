@@ -29,44 +29,39 @@ jobs:
             build-mode: 'none' # Use 'none' for JavaScript/TypeScript
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14' # Use the version of Node.js your project requires
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14' # Use the version of Node.js your project requires
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
-      with:
-        languages: ${{ matrix.language }}
-        build-mode: ${{ matrix.build-mode }}
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
-      with:
-        category: "/language:${{matrix.language}}"
-        # Example: Notify via GitHub Actions notifications
-    - name: Notify on Completion
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"
+
+      - name: Notify on Completion
         if: always()  # Ensure this runs even if previous steps fail
         run: echo "CodeQL analysis completed. Check workflow logs for details."
 
-      # Example: Print security findings summary
-    - name: Print Security Findings
+      - name: Print Security Findings
         if: always()  # Ensure this runs even if previous steps fail
         run: |
-          # Logic to parse and print security findings summary from logs
-          # This could include parsing CodeQL analysis results and printing a summary
           echo "Security findings summary:"
-          # Example: Print number of findings
-          grep -E "Security alert" $GITHUB_WORKSPACE/*.log | wc -l
+          # Add logic to parse and print security findings summary from logs if needed
 
-      # Example: Send email notification using a GitHub Action (if configured)
-    - name: Email Notification
+      - name: Email Notification
         if: always() && success()  # Send email on successful completion
         uses: dawidd6/action-send-mail@v3
         with:
