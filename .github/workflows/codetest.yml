@@ -3,10 +3,12 @@ name: "CodeQL for Specific Branch"
 on:
   push:
     branches: 
-      - "Sub-Naveen" # Only trigger on your specific branch
+      - "main"
+      - "your-branch-name" # Add your specific branch here
   pull_request:
     branches: 
-      - "Sub-Naveen" # Only trigger on pull requests to your specific branch
+      - "main"
+      - "your-branch-name" # Add your specific branch here
   schedule:
     - cron: '27 11 * * 5'
 
@@ -26,7 +28,7 @@ jobs:
       matrix:
         include:
           - language: 'javascript-typescript'
-            build-mode: 'automatic'
+            build-mode: 'autobuild' # Corrected build mode
 
     steps:
     - name: Checkout repository
