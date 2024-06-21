@@ -3,12 +3,12 @@ name: "CodeQL for Specific Branch"
 on:
   push:
     branches: 
-      - "Sub-Naveen" # Add your specific branch here
+      - "Sub-Naveen" # Replace with your specific branch name
   pull_request:
     branches: 
-      - "Sub-Naveen" # Add your specific branch here
+      - "Sub-Naveen" # Replace with your specific branch name
   schedule:
-    - cron: '27 11 * * 5'
+    - cron: '27 11 * * 5' # Optional: Scheduled runs
 
 jobs:
   analyze:
@@ -26,11 +26,19 @@ jobs:
       matrix:
         include:
           - language: 'javascript-typescript'
-            build-mode: 'autobuild' # Corrected build mode
+            build-mode: 'autobuild' # Use 'autobuild' for automatic builds
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14' # Use the version of Node.js your project requires
+
+    - name: Install dependencies
+      run: npm install
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
@@ -41,11 +49,8 @@ jobs:
     - if: matrix.build-mode == 'manual'
       shell: bash
       run: |
-        echo 'If you are using a "manual" build mode for one or more of the' \
-          'languages you are analyzing, replace this with the commands to build' \
-          'your code, for example:'
-        echo '  make bootstrap'
-        echo '  make release'
+        # Provide manual build commands here if needed
+        echo 'Building project manually...'
         exit 1
 
     - name: Perform CodeQL Analysis
