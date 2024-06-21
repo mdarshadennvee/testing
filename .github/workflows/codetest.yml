@@ -3,10 +3,10 @@ name: "CodeQL for Specific Branch"
 on:
   push:
     branches: 
-      - "Sub-jk" # Replace with your specific branch name
+      - "Sub-Naveen" # Replace with your specific branch name
   pull_request:
     branches: 
-      - "Sub-hjk" # Replace with your specific branch name
+      - "Sub-Naveen" # Replace with your specific branch name
   schedule:
     - cron: '27 11 * * 5' # Optional: Scheduled runs
 
