@@ -50,3 +50,31 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
+        # Example: Notify via GitHub Actions notifications
+      - name: Notify on Completion
+        if: always()  # Ensure this runs even if previous steps fail
+        run: echo "CodeQL analysis completed. Check workflow logs for details."
+
+      # Example: Print security findings summary
+      - name: Print Security Findings
+        if: always()  # Ensure this runs even if previous steps fail
+        run: |
+          # Logic to parse and print security findings summary from logs
+          # This could include parsing CodeQL analysis results and printing a summary
+          echo "Security findings summary:"
+          # Example: Print number of findings
+          grep -E "Security alert" $GITHUB_WORKSPACE/*.log | wc -l
+
+      # Example: Send email notification using a GitHub Action (if configured)
+      - name: Email Notification
+        if: always() && success()  # Send email on successful completion
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: naveen.chinnasamy@ennvee.net
+          server_port: 587
+          username: "Naveen Chinnasamy"
+          password: "Chn442ens"
+          subject: "CodeQL Analysis Results"
+          body: |
+            CodeQL analysis for branch '${{ github.ref }}' completed successfully.
+            Review the security findings in the workflow logs.
