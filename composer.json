@@ -3,18 +3,9 @@
     "description": "Your project description",
     "type": "project",
     "license": "MIT",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/psalm/psalm-github-security-scan"
-        }
-    ],
     "require": {
         "php": "^7.4 || ^8.0"
     },
-    "require-dev": {
-        "psalm/psalm-github-security-scan": "dev-main"
-     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
