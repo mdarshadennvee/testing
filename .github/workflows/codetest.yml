@@ -38,9 +38,6 @@ jobs:
       - name: Adjust Minimum Stability
         run: composer config minimum-stability dev
 
-      - name: Install Psalm Security Scan
-        run: composer require --dev psalm/psalm-github-security-scan
-
       - name: Run Psalm Security Scan
         run: vendor/bin/psalm --version
 
