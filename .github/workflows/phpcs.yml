@@ -27,13 +27,13 @@ jobs:
         run: chmod +x vendor/bin/phpcs
 
       - name: Run PHP CodeSniffer and output Checkstyle XML
-        run: vendor/bin/phpcs --report=checkstyle --report-file=phpcs-results.xml --standard=PSR12 .
+        run: vendor/bin/phpcs --report=checkstyle --report-file=phpcs-results.sarif --standard=PSR12 .
 
       - name: List files in the directory
         run: ls -la
 
-      - name: Convert PHP CodeSniffer XML to SARIF
-        run: php phpcs-to-sarif.php phpcs-results.xml phpcs-results.sarif
+      #- name: Convert PHP CodeSniffer XML to SARIF
+        #run: php phpcs-to-sarif.php phpcs-results.xml phpcs-results.sarif
 
       - name: Upload SARIF results to GitHub
         uses: github/codeql-action/upload-sarif@v3
