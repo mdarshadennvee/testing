@@ -7,7 +7,7 @@
         "php": "^7.4 || ^8.0"
     },
     "require-dev": {
-        "psalm/psalm-github-security-scan": "^1.0"
+        "psalm/psalm-github-security-scan": "*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
