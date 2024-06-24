@@ -2,11 +2,9 @@ name: PHP CodeSniffer
 
 on:
   push:
-    branches:
-      - main  # adjust branch as needed
+    branches: Sub-Naveen
   pull_request:
-    branches:
-      - main  # adjust branch as needed
+    branches: Sub-Naveen
 
 jobs:
   phpcs:
@@ -28,11 +26,5 @@ jobs:
       - name: Run PHP CodeSniffer
         run: vendor/bin/phpcs --standard=PSR12 --report=checkstyle --report-file=phpcs-results.xml .
 
-     - name: Convert PHP CodeSniffer XML to SARIF
+      - name: Convert PHP CodeSniffer XML to SARIF
         run: php phpcs-to-sarif.php phpcs-results.xml phpcs-results.sarif
-
-      - name: Upload SARIF results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: phpcs-results.sarif
-          wait-for-processing: true
