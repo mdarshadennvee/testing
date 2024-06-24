@@ -1,6 +1,25 @@
+# This workflow runs Psalm Security Scan on PHP files and uploads results to GitHub
+
+name: Psalm Security Scan
+
+on:
+  push:
+    branches:
+      - Sub-Naveen
+  pull_request:
+    branches:
+      - Sub-Naveen
+
+permissions:
+  contents: read
+
 jobs:
   php-security:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
 
     steps:
       - name: Checkout code
