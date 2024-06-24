@@ -11,8 +11,8 @@ on:
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
     permissions:
       security-events: write
       packages: read
@@ -23,8 +23,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - language: 'javascript-typescript'
-            build-mode: 'none' # Use 'none' for JavaScript/TypeScript
+          - language: 'javascript'
+            build-mode: 'none' # Use 'none' for JavaScript
           - language: 'php'
             build-mode: 'none' # PHP does not require a build step
 
@@ -32,15 +32,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up environment
-        if: matrix.language == 'javascript-typescript'
+      - name: Set up Node.js
+        if: matrix.language == 'javascript'
         uses: actions/setup-node@v2
         with:
           node-version: '14' # Use the version of Node.js your project requires
 
-      - name: Install dependencies for JavaScript/TypeScript
-        if: matrix.language == 'javascript-typescript'
+      - name: Install dependencies for JavaScript
+        if: matrix.language == 'javascript'
         run: npm install
+
+      - name: Set up PHP
+        if: matrix.language == 'php'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4' # Specify the PHP version you need
+
+      - name: Install PHP dependencies
+        if: matrix.language == 'php'
+        run: composer install
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
