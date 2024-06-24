@@ -1,14 +1,16 @@
-name: PHP Code Analysis
+name: PHP CodeSniffer
 
 on:
   push:
-    branches: [ Sub-Naveen ]
+    branches:
+      - main  # adjust branch as needed
   pull_request:
-    branches: [ Sub-Naveen ]
+    branches:
+      - main  # adjust branch as needed
 
 jobs:
-  analysis:
-    name: Run PHP Analysis
+  phpcs:
+    name: PHP CodeSniffer
     runs-on: ubuntu-latest
 
     steps:
@@ -18,15 +20,16 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '7.4'  # adjust PHP version as needed
 
       - name: Install Composer dependencies
-        run: composer install --no-progress --no-suggest
+        run: composer install --no-interaction --prefer-dist
 
-      - name: Run PHP CodeSniffer and output Checkstyle XML
-        run: php vendor/bin/phpcs --report=checkstyle --report-file=phpcs-results.xml --standard=PSR12 .
-
-      - name: Convert PHP CodeSniffer XML to SARIF
+      - name: Run PHP CodeSniffer
+        run: vendor/bin/phpcs --standard=PSR12 --report=checkstyle --report-file=phpcs-results.xml .
+        wait-for-processing: true
+        
+     - name: Convert PHP CodeSniffer XML to SARIF
         run: php phpcs-to-sarif.php phpcs-results.xml phpcs-results.sarif
 
       - name: Upload SARIF results to GitHub Security tab
