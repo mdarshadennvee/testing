@@ -1,5 +1,3 @@
-# This workflow runs Psalm Security Scan on PHP files and uploads results to GitHub
-
 name: Psalm Security Scan
 
 on:
@@ -9,6 +7,7 @@ on:
   pull_request:
     branches:
       - Sub-Naveen
+
 
 permissions:
   contents: read
@@ -35,6 +34,9 @@ jobs:
 
       - name: Verify Composer installation
         run: composer --version
+
+      - name: Adjust Minimum Stability
+        run: composer config minimum-stability dev
 
       - name: Install Psalm Security Scan
         run: composer require --dev psalm/psalm-github-security-scan

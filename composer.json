@@ -2,4 +2,10 @@
     "require": {
         "monolog/monolog": "2.0.*"
     }
+,
+
+    "require-dev": {
+        "psalm/psalm-github-security-scan": "^1.0"
+    }
+
 }
