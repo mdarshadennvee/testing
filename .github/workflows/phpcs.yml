@@ -53,6 +53,9 @@ jobs:
       - name: Run PHP CodeSniffer
         run: vendor/bin/phpcs --report=checkstyle --report-file=phpcs-results.xml --standard=PSR12
 
+      - name: Debug: List files in the directory
+        run: ls -la
+        
       - name: Convert PHP CodeSniffer XML to SARIF
         run: php phpcs-to-sarif.php phpcs-results.xml phpcs-results.sarif
 
