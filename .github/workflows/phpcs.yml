@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -23,19 +23,13 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-progress --no-suggest
 
-      - name: Ensure permissions for PHP CodeSniffer
-        run: chmod +x vendor/bin/phpcs
-
       - name: Run PHP CodeSniffer and output Checkstyle XML
         run: vendor/bin/phpcs --report=checkstyle --report-file=phpcs-results.xml --standard=PSR12 .
 
-      - name: List files in the directory
-        run: ls -la vendor
-
       - name: Convert PHP CodeSniffer XML to SARIF
-        run: php phpcs-to-sarif.php input.xml output.sarif
+        run: php phpcs-to-sarif.php phpcs-results.xml phpcs-results.sarif
 
-      - name: Upload SARIF results to GitHub
+      - name: Upload SARIF results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: phpcs-results.sarif
