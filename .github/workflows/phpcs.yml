@@ -43,15 +43,12 @@ jobs:
         with:
           coverage: none
           tools: phpmd
-
-      - name: Run PHPMD
-        run: phpmd . sarif codesize --reportfile phpmd-results.sarif
-        continue-on-error: true
+          
       - name: Set execute permissions for PHP CodeSniffer
         run: chmod +x vendor/bin/phpcs
 
       - name: Run PHP CodeSniffer
-        run: vendor/bin/phpcs --report=checkstyle --report-file=phpcs-results.xml --standard=PSR12
+        run: vendor/bin/phpcs --report=checkstyle --report-file=phpcs-results.sarif --standard=PSR12
 
       - name: List files in the directory
         run: ls -la
