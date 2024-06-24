@@ -42,23 +42,13 @@ jobs:
         if: matrix.language == 'javascript'
         run: npm install
 
-      - name: Set up PHP
-        if: matrix.language == 'php'
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4' # Specify the PHP version you need
-
-      - name: Install PHP dependencies
-        if: matrix.language == 'php'
-        run: composer install
-
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v2
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v2
         with:
           category: "/language:${{matrix.language}}"
