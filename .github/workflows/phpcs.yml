@@ -52,8 +52,7 @@ jobs:
         
       - name: Run PHP CodeSniffer
         run: vendor/bin/phpcs --report=checkstyle --report-file=phpcs-results.xml --standard=PSR12 .
-
-      - name: Debug: List files in the directory
+     - name: Debug: List files in the directory
         run: ls -la
 
       - name: Verify if PHP CodeSniffer report file exists
@@ -65,10 +64,10 @@ jobs:
             exit 1
           fi
       - name: Convert PHP CodeSniffer XML to SARIF
-        run: php phpcs-to-sarif.php vendor/bin/phpcs --report-file=phpcs-results.xml phpcs-results.sarif
+        run: php phpcs-to-sarif.php phpcs-results.xml phpcs-results.sarif
 
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: phpcs-results.sarif
+          sarif_file: phpmd-results.sarif
           wait-for-processing: true
