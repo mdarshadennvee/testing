@@ -25,7 +25,7 @@ jobs:
         include:
           - language: 'javascript'
             build-mode: 'none' # Use 'none' for JavaScript
-          - language: 'php'
+          - language: 'python'
             build-mode: 'none' # PHP does not require a build step
 
     steps:
