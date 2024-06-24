@@ -30,7 +30,7 @@ jobs:
         run: vendor/bin/phpcs --report=checkstyle --report-file=phpcs-results.xml --standard=PSR12 .
 
       - name: List files in the directory
-        run: ls -la
+        run: ls -la vendor
 
       - name: Convert PHP CodeSniffer XML to SARIF
         run: php phpcs-to-sarif.php input.xml output.sarif
