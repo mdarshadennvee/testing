@@ -37,6 +37,9 @@ jobs:
 
       - name: Adjust Minimum Stability
         run: composer config minimum-stability dev
+        
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Run Psalm Security Scan
         run: vendor/bin/psalm --version
