@@ -25,17 +25,21 @@ jobs:
         include:
           - language: 'javascript-typescript'
             build-mode: 'none' # Use 'none' for JavaScript/TypeScript
+          - language: 'php'
+            build-mode: 'none' # PHP does not require a build step
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Set up environment
+        if: matrix.language == 'javascript-typescript'
         uses: actions/setup-node@v2
         with:
           node-version: '14' # Use the version of Node.js your project requires
 
-      - name: Install dependencies
+      - name: Install dependencies for JavaScript/TypeScript
+        if: matrix.language == 'javascript-typescript'
         run: npm install
 
       - name: Initialize CodeQL
@@ -48,4 +52,3 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{matrix.language}}"
-
