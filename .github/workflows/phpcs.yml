@@ -24,7 +24,12 @@ jobs:
         run: composer install --no-interaction --prefer-dist
 
       - name: Run PHP CodeSniffer
-        run: vendor/bin/phpcs --standard=PSR12 --report=checkstyle --report-file=phpcs-results.xml .
+        run: php vendor/bin/phpcs --standard=PSR12 --report=checkstyle --report-file=phpcs-results.xml .
 
       - name: Convert PHP CodeSniffer XML to SARIF
         run: php phpcs-to-sarif.php phpcs-results.xml phpcs-results.sarif
+      - name: Upload analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: phpcs-results.sarif
+          wait-for-processing: true
