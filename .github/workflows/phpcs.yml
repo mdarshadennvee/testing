@@ -2,9 +2,9 @@ name: PHP Code Analysis
 
 on:
   push:
-    branches: [ Sub-Naveen ]
+    branches: Sub-Naveen
   pull_request:
-    branches: [ Sub-Naveen ]
+    branches: Sub-Naveen 
 
 jobs:
   analysis:
