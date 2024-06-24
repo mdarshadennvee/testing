@@ -27,9 +27,7 @@ jobs:
         run: chmod +x vendor/bin/phpcs
 
       - name: Run PHP CodeSniffer and output Checkstyle XML
-        run: |
-          vendor/bin/phpcs --report=checkstyle --report-file=phpcs-results.xml --standard=PSR12 .
-          cat phpcs-results.xml  # Output the contents of the XML file for debugging
+        run: vendor/bin/phpcs --report=checkstyle --report-file=phpcs-results.xml --standard=PSR12 .
 
       - name: Convert PHP CodeSniffer XML to SARIF
         run: php phpcs-to-sarif.php phpcs-results.xml phpcs-results.sarif
