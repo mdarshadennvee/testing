@@ -27,8 +27,8 @@ jobs:
 
       - name: Run PHP CodeSniffer
         run: vendor/bin/phpcs --standard=PSR12 --report=checkstyle --report-file=phpcs-results.xml .
-        wait-for-processing: true
-        
+         wait-for-processing: true
+
      - name: Convert PHP CodeSniffer XML to SARIF
         run: php phpcs-to-sarif.php phpcs-results.xml phpcs-results.sarif
 
