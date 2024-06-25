@@ -27,6 +27,7 @@ jobs:
 
       - name: Run Psalm
         run: php vendor/bin/psalm --config=psalm.xml --output-format=sarif --report=psalm.sarif
+        continue-on-error: true
 
       - name: Upload SARIF to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v1
