@@ -1,21 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>XSS Vulnerability Test</title>
-</head>
-<body>
-    <h1>XSS Vulnerability Test</h1>
-    <form method="GET" action="">
-        <label for="name">Enter your name:</label>
-        <input type="text" id="name" name="name">
-        <input type="submit" value="Submit">
-    </form>
-    <?php
-    if (isset($_GET['name'])) {
-        $name = $_GET['name'];
-        // This line contains an XSS vulnerability
-        echo "<p>Hello, " . $name . "!</p>";
+<?php
+// Assume user input via a form
+$username = $_POST['username'];
+$password = $_POST['password'];
+
+// Vulnerable SQL query construction
+$sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+$result = mysqli_query($conn, $sql);
+
+if ($result) {
+    // Check if any rows were returned
+    if (mysqli_num_rows($result) > 0) {
+        // User authenticated successfully
+        echo "Login successful!";
+    } else {
+        // No matching user found
+        echo "Invalid username or password.";
     }
-    ?>
-</body>
-</html>
+} else {
+    // SQL query execution failed
+    echo "Error: " . mysqli_error($conn);
+}
+
+// Close database connection
+mysqli_close($conn);
+?>
