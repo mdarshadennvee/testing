@@ -6,6 +6,7 @@
        resolveFromConfigFile="true">
 
     <projectFiles>
+            <file name="crosssite.php"/>
         <file name="test.php"/>
     </projectFiles>
 
