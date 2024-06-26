@@ -49,7 +49,6 @@ jobs:
 
       - name: Convert JSON to SARIF
         run: |
-          # Check if security.json is not empty and contains valid JSON
           if [[ -s "security.json" ]]; then
             jq -n \
               --arg version "2.1.0" \
