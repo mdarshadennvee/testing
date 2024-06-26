@@ -37,8 +37,8 @@ jobs:
       - name: Install PHP Security Checker
         run: composer global require enlightn/security-checker
 
-      - name: Run Security Check
-        run: ~/.composer/vendor/bin/security-checker security:check --format=sarif --output=security.sarif
+      - name: Run Security Check and Save Output
+        run: ~/.composer/vendor/bin/security-checker security:check --format=sarif > security.sarif
 
       - name: Upload Security Checker SARIF to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
