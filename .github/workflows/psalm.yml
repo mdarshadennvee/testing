@@ -43,8 +43,6 @@ jobs:
       - name: Install jq
         run: sudo apt-get install -y jq
 
-
-
       - name: Convert JSON to SARIF
         run: |
           jq '{
@@ -57,16 +55,16 @@ jobs:
                     "name": "PHP Security Checker",
                     "informationUri": "https://github.com/enlightn/security-checker",
                     "rules": [
-                      {
+                      .vulnerabilities[] | {
                         "id": .advisoryId,
                         "shortDescription": { "text": .title },
                         "fullDescription": { "text": .link }
-                      } for .vulnerabilities[]
+                      }
                     ]
                   }
                 },
                 "results": [
-                  {
+                  .vulnerabilities[] | {
                     "ruleId": .advisoryId,
                     "message": { "text": .title },
                     "locations": [
@@ -80,7 +78,7 @@ jobs:
                         }
                       }
                     ]
-                  } for .vulnerabilities[]
+                  }
                 ]
               }
             ]
