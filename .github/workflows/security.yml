@@ -21,10 +21,10 @@ jobs:
       run: composer install
 
     - name: Run PHP CodeSniffer
-      run: vendor/bin/phpcs --standard=PSR12 src/ -p -s --report=json > phpcs-report.json
+      run: php vendor/bin/phpcs --standard=PSR12 src/ -p -s --report=json > phpcs-report.json
 
     - name: Convert PHP CodeSniffer output to SARIF
-      run: vendor/bin/phpcs-security-audit convert:to-sarif phpcs-report.json > phpcs-report.sarif
+      run: php vendor/bin/phpcs-security-audit convert:to-sarif phpcs-report.json > phpcs-report.sarif
 
     - name: Upload PHP CodeSniffer SARIF report
       uses: github/codeql-action/upload-sarif@v2
