@@ -22,6 +22,9 @@ jobs:
         with:
           php-version: '7.4'
 
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
       - name: Run Psalm
         run: php vendor/bin/psalm --config=psalm.xml --output-format=sarif --report=psalm.sarif
         id: psalm-analysis  # Set an ID for later reference
