@@ -24,6 +24,14 @@ jobs:
       - name: Clear Cache
         run: composer clear-cache
         
+      - name: Install Composer
+        run: |
+          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+          php -r "unlink('composer-setup.php');"
+        # Optionally update Composer to the latest version
+        # - run: composer self-update
+
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
 
