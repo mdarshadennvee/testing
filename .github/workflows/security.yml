@@ -1,0 +1,99 @@
+name: PHP Code Standards and Security Check
+
+on: [push, pull_request]
+
+jobs:
+  php-cs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.4
+        extensions: mbstring, xml, mysql
+        coverage: none
+
+    - name: Install dependencies
+      run: composer install
+
+    - name: Install SARIF Converters
+      run: |
+        composer require --dev phpcodesniffer/phpcs-security-audit
+        composer require --dev phpstan/phpstan-sarif
+        composer require --dev sensiolabs/security-checker
+
+    - name: Run PHP CodeSniffer
+      run: vendor/bin/phpcs --standard=PSR12 src/ -p -s --report=json > phpcs-report.json
+
+    - name: Convert PHP CodeSniffer output to SARIF
+      run: vendor/bin/phpcs-security-audit convert:to-sarif phpcs-report.json > phpcs-report.sarif
+
+    - name: Upload PHP CodeSniffer SARIF report
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: phpcs-report.sarif
+
+    - name: Run PHPStan
+      run: vendor/bin/phpstan analyse src --level=max --error-format=json > phpstan-report.json
+
+    - name: Convert PHPStan output to SARIF
+      run: vendor/bin/phpstan-sarif phpstan-report.json phpstan-report.sarif
+
+    - name: Upload PHPStan SARIF report
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: phpstan-report.sarif
+
+    - name: Run security check
+      run: vendor/bin/security-checker security:check --format=json > security-check-report.json
+
+    - name: Convert security check output to SARIF
+      run: |
+        echo '{
+          "$schema": "http://json.schemastore.org/sarif-2.1.0",
+          "version": "2.1.0",
+          "runs": [
+            {
+              "tool": {
+                "driver": {
+                  "name": "Security Checker",
+                  "rules": [
+                    {
+                      "id": "SecurityChecker",
+                      "shortDescription": {
+                        "text": "Security vulnerabilities found"
+                      }
+                    }
+                  ]
+                }
+              },
+              "results": [
+                {
+                  "ruleId": "SecurityChecker",
+                  "message": {
+                    "text": "Security vulnerabilities found"
+                  },
+                  "locations": [
+                    {
+                      "physicalLocation": {
+                        "artifactLocation": {
+                          "uri": "./composer.lock",
+                          "uriBaseId": "security"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }' > security-check-report.sarif
+
+    - name: Upload Security Check SARIF report
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: security-check-report.sarif

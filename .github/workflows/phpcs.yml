@@ -2,9 +2,9 @@ name: PHP CodeSniffer
 
 on:
   push:
-    branches: Sub-Naveen
+    branches: main
   pull_request:
-    branches: Sub-Naveen
+    branches: main
 
 jobs:
   phpcs:
