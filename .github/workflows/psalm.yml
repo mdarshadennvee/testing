@@ -38,55 +38,60 @@ jobs:
         run: composer global require enlightn/security-checker
 
       - name: Run Security Check and Save JSON Output
-        run: ~/.composer/vendor/bin/security-checker security:check --format=json > security.json
+        run: |
+          ~/.composer/vendor/bin/security-checker security:check --format=json > security.json
+          cat security.json  # Debugging: Output the content of security.json
 
       - name: Install jq
         run: sudo apt-get install -y jq
 
-      - name: Debug security.json
-        run: cat security.json
-
       - name: Convert JSON to SARIF
         run: |
-          jq -n \
-            --arg version "2.1.0" \
-            --arg schema "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json" \
-            --arg uri "https://github.com/enlightn/security-checker" \
-            --argjson vulnerabilities "$(jq '.vulnerabilities' security.json)" \
-            '{
-              "version": $version,
-              "$schema": $schema,
-              "runs": [
-                {
-                  "tool": {
-                    "driver": {
-                      "name": "PHP Security Checker",
-                      "informationUri": $uri,
-                      "rules": []
-                    }
-                  },
-                  "results": [
-                    $vulnerabilities[] | {
-                      "ruleId": .advisoryId,
-                      "message": { "text": .title },
-                      "locations": [
-                        {
-                          "physicalLocation": {
-                            "artifactLocation": { "uri": "composer.lock" },
-                            "region": {
-                              "startLine": 1,
-                              "startColumn": 1
+          # Check if security.json is not empty and contains valid JSON
+          if [[ -s "security.json" ]]; then
+            jq -n \
+              --arg version "2.1.0" \
+              --arg schema "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json" \
+              --arg uri "https://github.com/enlightn/security-checker" \
+              --argjson vulnerabilities "$(jq '.vulnerabilities' security.json)" \
+              '{
+                "version": $version,
+                "$schema": $schema,
+                "runs": [
+                  {
+                    "tool": {
+                      "driver": {
+                        "name": "PHP Security Checker",
+                        "informationUri": $uri,
+                        "rules": []
+                      }
+                    },
+                    "results": [
+                      $vulnerabilities[] | {
+                        "ruleId": .advisoryId,
+                        "message": { "text": .title },
+                        "locations": [
+                          {
+                            "physicalLocation": {
+                              "artifactLocation": { "uri": "composer.lock" },
+                              "region": {
+                                "startLine": 1,
+                                "startColumn": 1
+                              }
                             }
                           }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }' > security.sarif
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }' > security.sarif
+          else
+            echo "security.json is empty or not found."
+          fi
 
       - name: Upload Security Checker SARIF to GitHub Code Scanning
+        if: success() && steps.static-analysis.outputs.psalm-success == 'true'  # Only upload if Psalm analysis was successful
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: security.sarif
