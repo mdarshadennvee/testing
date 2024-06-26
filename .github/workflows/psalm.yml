@@ -20,10 +20,8 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4' 
-      - name: Clear Cache
-        run: composer clear-cache
-        
+          php-version: '7.4'
+
       - name: Install Composer
         run: |
           php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -32,8 +30,11 @@ jobs:
         # Optionally update Composer to the latest version
         # - run: composer self-update
 
+      - name: Clear Cache
+        run: composer clear-cache
+
       - name: Install Composer dependencies
-        run: composer install --no-interaction --prefer-dist
+        run: composer install --no-interaction --prefer-dist -v
 
       - name: Run Psalm
         run: php vendor/bin/psalm --config=psalm.xml --output-format=sarif --report=psalm.sarif
