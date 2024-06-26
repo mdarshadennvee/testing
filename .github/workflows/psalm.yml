@@ -1,16 +1,16 @@
-name: Psalm Analysis
+name: Psalm Analysis and Security Check
 
 on:
   push:
     branches:
-      - Main  # Adjust branch as needed
+      - Sub-Naveen  # Adjust branch as needed
   pull_request:
     branches:
-      - main  # Adjust branch as needed
+      - Sub-Naveen  # Adjust branch as needed
 
 jobs:
-  psalm:
-    name: Psalm Static Analysis
+  static-analysis:
+    name: Static Analysis
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +29,18 @@ jobs:
         run: php vendor/bin/psalm --config=psalm.xml --output-format=sarif --report=psalm.sarif
         continue-on-error: true
 
-      - name: Upload SARIF to GitHub Code Scanning
+      - name: Upload Psalm SARIF to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: psalm.sarif
+
+      - name: Install PHP Security Checker
+        run: composer global require enlightn/security-checker
+
+      - name: Run Security Check
+        run: ~/.composer/vendor/bin/security-checker security:check --format=sarif --output=security.sarif
+
+      - name: Upload Security Checker SARIF to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: security.sarif
