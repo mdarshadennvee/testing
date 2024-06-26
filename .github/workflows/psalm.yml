@@ -43,9 +43,11 @@ jobs:
       - name: Install jq
         run: sudo apt-get install -y jq
 
+
+
       - name: Convert JSON to SARIF
         run: |
-          echo '{
+          jq '{
             "version": "2.1.0",
             "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
             "runs": [
@@ -54,31 +56,17 @@ jobs:
                   "driver": {
                     "name": "PHP Security Checker",
                     "informationUri": "https://github.com/enlightn/security-checker",
-                    "rules": []
-                  }
-                },
-                "results": []
-              }
-            ]
-          }' > security.sarif
-
-          jq -r '. | {
-            "runs": [
-              {
-                "tool": {
-                  "driver": {
-                    "name": "PHP Security Checker",
                     "rules": [
-                      (.vulnerabilities[] | {
+                      {
                         "id": .advisoryId,
                         "shortDescription": { "text": .title },
                         "fullDescription": { "text": .link }
-                      })
+                      } for .vulnerabilities[]
                     ]
                   }
                 },
                 "results": [
-                  (.vulnerabilities[] | {
+                  {
                     "ruleId": .advisoryId,
                     "message": { "text": .title },
                     "locations": [
@@ -92,11 +80,11 @@ jobs:
                         }
                       }
                     ]
-                  })
+                  } for .vulnerabilities[]
                 ]
               }
             ]
-          }' security.json | jq -s '.[0].runs[0].tool.driver.rules = [.[0].runs[0].tool.driver.rules] | .[0].runs[0].results = [.[0].runs[0].results] | .[0]' >> security.sarif
+          }' security.json > security.sarif
 
       - name: Upload Security Checker SARIF to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
