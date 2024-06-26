@@ -43,46 +43,48 @@ jobs:
       - name: Install jq
         run: sudo apt-get install -y jq
 
+      - name: Debug security.json
+        run: cat security.json
+
       - name: Convert JSON to SARIF
         run: |
-          jq '{
-            "version": "2.1.0",
-            "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
-            "runs": [
-              {
-                "tool": {
-                  "driver": {
-                    "name": "PHP Security Checker",
-                    "informationUri": "https://github.com/enlightn/security-checker",
-                    "rules": [
-                      .vulnerabilities[] | {
-                        "id": .advisoryId,
-                        "shortDescription": { "text": .title },
-                        "fullDescription": { "text": .link }
-                      }
-                    ]
-                  }
-                },
-                "results": [
-                  .vulnerabilities[] | {
-                    "ruleId": .advisoryId,
-                    "message": { "text": .title },
-                    "locations": [
-                      {
-                        "physicalLocation": {
-                          "artifactLocation": { "uri": "composer.lock" },
-                          "region": {
-                            "startLine": 1,
-                            "startColumn": 1
+          jq -n \
+            --arg version "2.1.0" \
+            --arg schema "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json" \
+            --arg uri "https://github.com/enlightn/security-checker" \
+            --argjson vulnerabilities "$(jq '.vulnerabilities' security.json)" \
+            '{
+              "version": $version,
+              "$schema": $schema,
+              "runs": [
+                {
+                  "tool": {
+                    "driver": {
+                      "name": "PHP Security Checker",
+                      "informationUri": $uri,
+                      "rules": []
+                    }
+                  },
+                  "results": [
+                    $vulnerabilities[] | {
+                      "ruleId": .advisoryId,
+                      "message": { "text": .title },
+                      "locations": [
+                        {
+                          "physicalLocation": {
+                            "artifactLocation": { "uri": "composer.lock" },
+                            "region": {
+                              "startLine": 1,
+                              "startColumn": 1
+                            }
                           }
                         }
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }' security.json > security.sarif
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }' > security.sarif
 
       - name: Upload Security Checker SARIF to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
