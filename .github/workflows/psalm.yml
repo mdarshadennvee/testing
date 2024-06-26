@@ -30,7 +30,7 @@ jobs:
         # Optionally update Composer to the latest version
         # - run: composer self-update
 
-      - name: Clear Cache
+      - name: Clear Caches
         run: composer clear-cache
 
       - name: Install Composer dependencies
