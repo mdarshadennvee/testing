@@ -20,12 +20,6 @@ jobs:
     - name: Install dependencies
       run: composer install
 
-    - name: Install SARIF Converters
-      run: |
-        composer require --dev phpcodesniffer/phpcs-security-audit
-        composer require --dev phpstan/phpstan-sarif
-        composer require --dev sensiolabs/security-checker
-
     - name: Run PHP CodeSniffer
       run: vendor/bin/phpcs --standard=PSR12 src/ -p -s --report=json > phpcs-report.json
 
