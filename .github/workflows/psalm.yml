@@ -27,14 +27,14 @@ jobs:
 
       - name: Run Psalm
         run: php vendor/bin/psalm --config=psalm.xml --output-format=sarif --report=psalm.sarif
-        id: psalm-analysis  # Set an ID for later reference
+       # id: psalm-analysis   Set an ID for later reference
         continue-on-error: true
 
       - name: Upload Psalm SARIF to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: psalm.sarif
-        if: steps.psalm-analysis.outputs.psalm-success == 'true'  # Only upload if Psalm analysis was successful
+        # if: steps.psalm-analysis.outputs.psalm-success == 'true'   Only upload if Psalm analysis was successful
 
       - name: Install PHP Security Checker
         run: composer global require enlightn/security-checker
@@ -64,7 +64,7 @@ jobs:
           fi
 
       - name: Upload Security Checker SARIF to GitHub Code Scanning
-        if: success() && steps.psalm-analysis.outputs.psalm-success == 'true'  # Only upload if Psalm analysis was successful
+        #if: success() && steps.psalm-analysis.outputs.psalm-success == 'true'  # Only upload if Psalm analysis was successful
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: security.sarif

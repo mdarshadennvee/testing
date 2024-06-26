@@ -8,6 +8,7 @@
     <projectFiles>
             <file name="crosssite.php"/>
         <file name="test.php"/>
+                <file name="test.js"/>
     </projectFiles>
 
 </psalm>
