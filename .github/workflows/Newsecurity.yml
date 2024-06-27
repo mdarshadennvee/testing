@@ -1,0 +1,92 @@
+name: PHP Security Checks
+
+on:
+  push:
+    branches:
+      - Sub-Naveen
+  pull_request:
+    branches:
+      - Sub-Naveen
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.0'
+
+    - name: Install dependencies
+      run: composer install --no-progress --no-suggest
+
+    - name: Run PHPStan
+      run: vendor/bin/phpstan analyse --level=max --error-format=sarif > phpstan-report.sarif
+
+    - name: Run Psalm
+      run: vendor/bin/psalm --output-format=sarif > psalm-report.sarif
+
+    - name: Run PHP CodeSniffer
+      run: vendor/bin/phpcs --report=code --report-file=phpcs-report.xml
+
+    - name: Convert PHP CodeSniffer report to SARIF
+      run: |
+        pip install xmltodict
+        xml2sarif.py phpcs-report.xml > phpcs-report.sarif
+
+    - name: Composer Audit
+      run: composer audit --format=json > composer-audit-report.json
+
+    - name: Convert Composer Audit report to SARIF
+      run: |
+        pip install json2sarif
+        json2sarif.py composer-audit-report.json > composer-audit-report.sarif
+
+    - name: Run OWASP Dependency-Check
+      uses: dependency-check/scan-action@v1
+      with:
+        project: my-php-project
+        format: SARIF
+        outputDirectory: ./dependency-check-report
+
+    - name: Run GrumPHP
+      run: vendor/bin/grumphp run
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: php
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: '/security'
+
+    - name: Upload SARIF file for PHPStan
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: phpstan-report.sarif
+
+    - name: Upload SARIF file for Psalm
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: psalm-report.sarif
+
+    - name: Upload SARIF file for PHP CodeSniffer
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: phpcs-report.sarif
+
+    - name: Upload SARIF file for Composer Audit
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: composer-audit-report.sarif
+
+    - name: Upload SARIF file for OWASP Dependency-Check
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: ./dependency-check-report/dependency-check-report.sarif

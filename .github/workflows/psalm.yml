@@ -3,10 +3,10 @@ name: Psalm Analysis and Security Check
 on:
   push:
     branches:
-      - Sub-Naveen  # Adjust branch as needed
+      - main  # Adjust branch as needed
   pull_request:
     branches:
-      - Sub-Naveen  # Adjust branch as needed
+      - main  # Adjust branch as needed
 
 jobs:
   static-analysis:

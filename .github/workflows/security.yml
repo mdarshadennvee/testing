@@ -1,6 +1,12 @@
 name: PHP Code Standards and Security Check
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main  # Adjust branch as needed
+  pull_request:
+    branches:
+      - main  # Adjust branch as needed
 
 jobs:
   php-cs:
