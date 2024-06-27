@@ -46,13 +46,6 @@ jobs:
         pip install json2sarif
         json2sarif.py composer-audit-report.json > composer-audit-report.sarif
 
-    - name: Run OWASP Dependency-Check
-      uses: dependency-check/scan-action@v1
-      with:
-        project: my-php-project
-        format: SARIF
-        outputDirectory: ./dependency-check-report
-
     - name: Run GrumPHP
       run: vendor/bin/grumphp run
 
@@ -85,8 +78,3 @@ jobs:
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: composer-audit-report.sarif
-
-    - name: Upload SARIF file for OWASP Dependency-Check
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: ./dependency-check-report/dependency-check-report.sarif
