@@ -73,8 +73,3 @@ jobs:
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: phpcs-report.sarif
-
-    - name: Upload SARIF file for Composer Audit
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: composer-audit-report.sarif
